@@ -42,7 +42,7 @@ spec:
   type: NodePort
   ports:
     - port: 9080
-      nodePort: 31005
+      nodePort: 31006
   selector:
     app: looper
 ---
