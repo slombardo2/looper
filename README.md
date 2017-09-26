@@ -14,19 +14,10 @@
    limitations under the License.
 -->
 
-The *stock-quote* microservice gets the price of a specified stock.  It hits an API in **API Connect**,
-which drives a call to 'Quandl.com' to get the actual data.
+The *looper* microservice runs a dozen calls to *portfolio* REST APIs in a loop.
 
-It responds to a `GET /{symbol}` REST request, where you pass in a stock ticker symbol, and it returns
-a JSON object containing that *symbol*, the *price*, and the *date* it was quoted.
+It responds to a `GET ?count={count}` REST request, where you pass in the count of how many iterations
+to run.  If you omit the **count** query param, it assumes 1 iteration.
 
-For example, if you hit the `http://localhost:9080/stock-quote/IBM` URL, it would return
-`{"symbol": "IBM", "price": 155.23, "date": "2016-06-27"}`
-
-This service uses **Redis** for caching.  When a quote is requested, it first checks to see if the
-answer is in the cache, and if so, whether the quote is less that 24 hours old (Quandl only returns the
-previous business day's closing price), and if so, just uses that.  Otherwise (or if any exceptions
-occur communicating with Redis), it drives the REST call to **API Connect** as usual, then adds it to
-**Redis** so it's there for next time.
-
-The *Java for Redis*, or **Jedis**, library is used for communicating with **Redis**.
+For example, if you hit the `http://localhost:9080/looper?count=5` URL, it would run 5 iterations.  It
+returns the output from the various calls (various collections of JSON) as test/plain.
