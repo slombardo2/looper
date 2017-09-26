@@ -86,19 +86,19 @@ public class Looper extends Application {
 
     	response.append("5:  "+PortfolioServices.updatePortfolio(ID, SYMBOL3, 3)+"\n"); //Buy stock for this portfolio
 
-		System.out.println("6:  "+PortfolioServices.getPortfolio(ID)+"\n"); //Get details of this portfolio
+    	response.append("6:  "+PortfolioServices.getPortfolio(ID)+"\n"); //Get details of this portfolio
 
-		System.out.println("7:  "+PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
+    	response.append("7:  "+PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
 
-		System.out.println("8:  "+PortfolioServices.updatePortfolio(ID, SYMBOL1, 6)+"\n"); //Buy more of this stock for this portfolio
+    	response.append("8:  "+PortfolioServices.updatePortfolio(ID, SYMBOL1, 6)+"\n"); //Buy more of this stock for this portfolio
 
-		System.out.println("9:  "+PortfolioServices.updatePortfolio(ID, SYMBOL3, -3)+"\n"); //Sell all of this stock for this portfolio
+    	response.append("9:  "+PortfolioServices.updatePortfolio(ID, SYMBOL3, -3)+"\n"); //Sell all of this stock for this portfolio
 
-		System.out.println("10: "+PortfolioServices.getPortfolio(ID)+"\n"); //Get details of this portfolio
+    	response.append("10: "+PortfolioServices.getPortfolio(ID)+"\n"); //Get details of this portfolio
 
-		System.out.println("11: "+PortfolioServices.deletePortfolio(ID)+"\n"); //Remove this portfolio
+    	response.append("11: "+PortfolioServices.deletePortfolio(ID)+"\n"); //Remove this portfolio
 
-		System.out.println("12: "+PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
+    	response.append("12: "+PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
 
 		return response;
 	}
