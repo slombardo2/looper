@@ -54,7 +54,7 @@ public class Looper extends Application {
 
     	StringBuffer response = new StringBuffer();
 		long beginning = System.currentTimeMillis();
-
+		response.append("Starting run\n");
 		for (int index=1; index<=count; index++) {
 			if (count>1) { //only show if they asked for multiple iterations
 				response.append("\nIteration #"+index+"\n");
