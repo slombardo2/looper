@@ -66,7 +66,7 @@ public class Looper extends Application {
 
 			long end = System.currentTimeMillis();
 
-			response.append("Elapsed time for this iteration: "+(end-start)+" ms\n");
+			response.append("Elapsed time for this iteration: "+(end-start)+" ms\n\n");
 		}
 
 		if (count>1) { //only show if they asked for multiple iterations
@@ -82,41 +82,41 @@ public class Looper extends Application {
 	public StringBuffer iteration(String id) {
 		StringBuffer response = new StringBuffer();
 
-		response.append("1:  GET /portfolio\n    "+
-			PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
+		response.append("1:  GET /portfolio\n"+
+			PortfolioServices.getPortfolios()+"\n\n"); //Summary of all portfolios
 
-		response.append("2:  POST /portfolio/"+id+"\n    "+
-			PortfolioServices.createPortfolio(id)+"\n"); //Create a new portfolio
+		response.append("2:  POST /portfolio/"+id+"\n"+
+			PortfolioServices.createPortfolio(id)+"\n\n"); //Create a new portfolio
 
-		response.append("3:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=1\n    "+
-			PortfolioServices.updatePortfolio(id, SYMBOL1, 1)+"\n"); //Buy stock for this portfolio
+		response.append("3:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=1\n"+
+			PortfolioServices.updatePortfolio(id, SYMBOL1, 1)+"\n\n"); //Buy stock for this portfolio
 
-		response.append("4:  PUT /portfolio/"+id+"?symbol="+SYMBOL2+"&shares=2\n    "+
-			PortfolioServices.updatePortfolio(id, SYMBOL2, 2)+"\n"); //Buy stock for this portfolio
+		response.append("4:  PUT /portfolio/"+id+"?symbol="+SYMBOL2+"&shares=2\n"+
+			PortfolioServices.updatePortfolio(id, SYMBOL2, 2)+"\n\n"); //Buy stock for this portfolio
 
-		response.append("5:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=3\n    "+
-			PortfolioServices.updatePortfolio(id, SYMBOL3, 3)+"\n"); //Buy stock for this portfolio
+		response.append("5:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=3\n"+
+			PortfolioServices.updatePortfolio(id, SYMBOL3, 3)+"\n\n"); //Buy stock for this portfolio
 
-		response.append("6:  GET /portfolio/"+id+"\n    "+
-			PortfolioServices.getPortfolio(id)+"\n"); //Get details of this portfolio
+		response.append("6:  GET /portfolio/"+id+"\n"+
+			PortfolioServices.getPortfolio(id)+"\n\n"); //Get details of this portfolio
 
-		response.append("7:  GET /portfolio\n    "+
-			PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios, to see results
+		response.append("7:  GET /portfolio\n"+
+			PortfolioServices.getPortfolios()+"\n\n"); //Summary of all portfolios, to see results
 
-		response.append("8:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=6\n    "+
-			PortfolioServices.updatePortfolio(id, SYMBOL1, 6)+"\n"); //Buy more of this stock for this portfolio
+		response.append("8:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=6\n"+
+			PortfolioServices.updatePortfolio(id, SYMBOL1, 6)+"\n\n"); //Buy more of this stock for this portfolio
 
-		response.append("9:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=-3\n    "+
-			PortfolioServices.updatePortfolio(id, SYMBOL3, -3)+"\n"); //Sell all of this stock for this portfolio
+		response.append("9:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=-3\n"+
+			PortfolioServices.updatePortfolio(id, SYMBOL3, -3)+"\n\n"); //Sell all of this stock for this portfolio
 
-		response.append("10: GET /portfolio/"+id+"\n    "+
-			PortfolioServices.getPortfolio(id)+"\n"); //Get details of this portfolio again
+		response.append("10: GET /portfolio/"+id+"\n"+
+			PortfolioServices.getPortfolio(id)+"\n\n"); //Get details of this portfolio again
 
-		response.append("11: DELETE /portfolio/"+id+"\n    "+
-			PortfolioServices.deletePortfolio(id)+"\n"); //Remove this portfolio
+		response.append("11: DELETE /portfolio/"+id+"\n"+
+			PortfolioServices.deletePortfolio(id)+"\n\n"); //Remove this portfolio
 
-		response.append("12: GET /portfolio\n    "+
-			PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios, to see back to beginning
+		response.append("12: GET /portfolio\n"+
+			PortfolioServices.getPortfolios()+"\n\n"); //Summary of all portfolios, to see back to beginning
 
 		return response;
 	}
