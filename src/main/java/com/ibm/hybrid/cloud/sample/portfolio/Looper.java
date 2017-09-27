@@ -29,15 +29,15 @@ import javax.ws.rs.Path;
 @Path("/")
 /** Runs a set of Porfolio REST API calls in a loop. */
 public class Looper extends Application {
-	private static final String ID        = "Looper";
-	private static final String SYMBOL1   = "IBM";
-	private static final String SYMBOL2   = "AAPL";
-	private static final String SYMBOL3   = "GOOG";
+	private static final String BASE_ID = "Looper";
+	private static final String SYMBOL1 = "IBM";
+	private static final String SYMBOL2 = "AAPL";
+	private static final String SYMBOL3 = "GOOG";
 
 	public static void main(String[] args) {
 		if (args.length == 1) try {
 			Looper looper = new Looper();
-			looper.loop(Integer.parseInt(args[0]));
+			looper.loop(null, Integer.parseInt(args[0]));
 		} catch (Throwable t) {
 			t.printStackTrace();
 		} else {
@@ -48,57 +48,75 @@ public class Looper extends Application {
     @GET
     @Path("/")
 	@Produces("text/plain")
-	public String loop(@QueryParam("count") Integer count) {
+	public String loop(@QueryParam("id") String id, @QueryParam("count") Integer count) {
+    	if (id==null) id = BASE_ID;
     	if (count==null) count=1; //isn't autoboxing cool?
+
     	StringBuffer response = new StringBuffer();
 		long beginning = System.currentTimeMillis();
 
 		for (int index=1; index<=count; index++) {
-			response.append("Iteration #"+index+"\n");
+			if (count>1) { //only show if they asked for multiple iterations
+				response.append("\nIteration #"+index+"\n");
+			}
 
 			long start = System.currentTimeMillis();
 
-			response.append(iteration());
+			response.append(iteration(id));
 
 			long end = System.currentTimeMillis();
 
-			response.append("Elapsed time for iteration #"+index+": "+(end-start)+" ms\n");
+			response.append("Elapsed time for this iteration: "+(end-start)+" ms\n");
 		}
 
-		long ending = System.currentTimeMillis();
-		double average = ((double) (ending-beginning))/((double) count);
+		if (count>1) { //only show if they asked for multiple iterations
+			long ending = System.currentTimeMillis();
+			double average = ((double) (ending-beginning))/((double) count);
 
-		response.append("Overall average time per iteration: "+average+" ms\n");
+			response.append("Overall average time per iteration: "+average+" ms\n");
+		}
 
 		return response.toString();
 	}
 
-	public StringBuffer iteration() {
-    	StringBuffer response = new StringBuffer();
+	public StringBuffer iteration(String id) {
+		StringBuffer response = new StringBuffer();
 
-    	response.append("1:  "+PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
+		response.append("1:  GET /portfolio\n    "+
+			PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
 
-    	response.append("2:  "+PortfolioServices.createPortfolio(ID)+"\n"); //Create a new portfolio
+		response.append("2:  POST /portfolio/"+id+"\n    "+
+			PortfolioServices.createPortfolio(id)+"\n"); //Create a new portfolio
 
-    	response.append("3:  "+PortfolioServices.updatePortfolio(ID, SYMBOL1, 1)+"\n"); //Buy stock for this portfolio
+		response.append("3:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=1\n    "+
+			PortfolioServices.updatePortfolio(id, SYMBOL1, 1)+"\n"); //Buy stock for this portfolio
 
-    	response.append("4:  "+PortfolioServices.updatePortfolio(ID, SYMBOL2, 2)+"\n"); //Buy stock for this portfolio
+		response.append("4:  PUT /portfolio/"+id+"?symbol="+SYMBOL2+"&shares=2\n    "+
+			PortfolioServices.updatePortfolio(id, SYMBOL2, 2)+"\n"); //Buy stock for this portfolio
 
-    	response.append("5:  "+PortfolioServices.updatePortfolio(ID, SYMBOL3, 3)+"\n"); //Buy stock for this portfolio
+		response.append("5:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=3\n    "+
+			PortfolioServices.updatePortfolio(id, SYMBOL3, 3)+"\n"); //Buy stock for this portfolio
 
-    	response.append("6:  "+PortfolioServices.getPortfolio(ID)+"\n"); //Get details of this portfolio
+		response.append("6:  GET /portfolio/"+id+"\n    "+
+			PortfolioServices.getPortfolio(id)+"\n"); //Get details of this portfolio
 
-    	response.append("7:  "+PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
+		response.append("7:  GET /portfolio\n    "+
+			PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios, to see results
 
-    	response.append("8:  "+PortfolioServices.updatePortfolio(ID, SYMBOL1, 6)+"\n"); //Buy more of this stock for this portfolio
+		response.append("8:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=6\n    "+
+			PortfolioServices.updatePortfolio(id, SYMBOL1, 6)+"\n"); //Buy more of this stock for this portfolio
 
-    	response.append("9:  "+PortfolioServices.updatePortfolio(ID, SYMBOL3, -3)+"\n"); //Sell all of this stock for this portfolio
+		response.append("9:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=-3\n    "+
+			PortfolioServices.updatePortfolio(id, SYMBOL3, -3)+"\n"); //Sell all of this stock for this portfolio
 
-    	response.append("10: "+PortfolioServices.getPortfolio(ID)+"\n"); //Get details of this portfolio
+		response.append("10: GET /portfolio/"+id+"\n    "+
+			PortfolioServices.getPortfolio(id)+"\n"); //Get details of this portfolio again
 
-    	response.append("11: "+PortfolioServices.deletePortfolio(ID)+"\n"); //Remove this portfolio
+		response.append("11: DELETE /portfolio/"+id+"\n    "+
+			PortfolioServices.deletePortfolio(id)+"\n"); //Remove this portfolio
 
-    	response.append("12: "+PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios
+		response.append("12: GET /portfolio\n    "+
+			PortfolioServices.getPortfolios()+"\n"); //Summary of all portfolios, to see back to beginning
 
 		return response;
 	}
