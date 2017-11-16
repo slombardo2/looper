@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Enumeration;
+
+//Servlet 3.1 (JSR 340)
+import javax.servlet.http.HttpServletRequest;
 
 //JSON-P (JSR 353).  The replaces my old usage of IBM's JSON4J (package com.ibm.json.java)
 import javax.json.Json;
@@ -31,11 +35,11 @@ import javax.json.JsonStructure;
 public class PortfolioServices {
 	private static final String PORTFOLIO_SERVICE = "http://portfolio-service:9080/portfolio";
 
-	public static JsonArray getPortfolios() {
+	public static JsonArray getPortfolios(HttpServletRequest request) {
 		JsonArray portfolios = null;
 
 		try {
-			portfolios = (JsonArray) invokeREST("GET", PORTFOLIO_SERVICE);
+			portfolios = (JsonArray) invokeREST(request, "GET", PORTFOLIO_SERVICE);
 		} catch (Throwable t) {
 			t.printStackTrace();
 
@@ -47,11 +51,11 @@ public class PortfolioServices {
 		return portfolios;
 	}
 
-	public static JsonObject getPortfolio(String owner) {
+	public static JsonObject getPortfolio(HttpServletRequest request, String owner) {
 		JsonObject portfolio = null;
 
 		try {
-			portfolio = (JsonObject) invokeREST("GET", PORTFOLIO_SERVICE+"/"+owner);
+			portfolio = (JsonObject) invokeREST(request, "GET", PORTFOLIO_SERVICE+"/"+owner);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -59,11 +63,11 @@ public class PortfolioServices {
 		return portfolio;
 	}
 
-	public static JsonObject createPortfolio(String owner) {
+	public static JsonObject createPortfolio(HttpServletRequest request, String owner) {
 		JsonObject portfolio = null;
 
 		try {
-			portfolio = (JsonObject) invokeREST("POST", PORTFOLIO_SERVICE+"/"+owner);
+			portfolio = (JsonObject) invokeREST(request, "POST", PORTFOLIO_SERVICE+"/"+owner);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -71,12 +75,12 @@ public class PortfolioServices {
 		return portfolio;
 	}
 
-	public static JsonObject updatePortfolio(String owner, String symbol, int shares) {
+	public static JsonObject updatePortfolio(HttpServletRequest request, String owner, String symbol, int shares) {
 		JsonObject portfolio = null;
 
 		try {
 			String uri = PORTFOLIO_SERVICE+"/"+owner+"?symbol="+symbol+"&shares="+shares;
-			portfolio = (JsonObject) invokeREST("PUT", uri);
+			portfolio = (JsonObject) invokeREST(request, "PUT", uri);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -84,11 +88,11 @@ public class PortfolioServices {
 		return portfolio;
 	}
 
-	public static JsonObject deletePortfolio(String owner) {
+	public static JsonObject deletePortfolio(HttpServletRequest request, String owner) {
 		JsonObject portfolio = null;
 
 		try {
-			portfolio = (JsonObject) invokeREST("DELETE", PORTFOLIO_SERVICE+"/"+owner);
+			portfolio = (JsonObject) invokeREST(request, "DELETE", PORTFOLIO_SERVICE+"/"+owner);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -96,12 +100,15 @@ public class PortfolioServices {
 		return portfolio;
 	}
 
-	private static JsonStructure invokeREST(String verb, String uri) throws IOException {
+	private static JsonStructure invokeREST(HttpServletRequest request, String verb, String uri) throws IOException {
 		System.out.println(verb+" "+uri);
 
 		URL url = new URL(uri);
 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+		copyFromRequest(conn, request); //forward headers (including cookies) from inbound request
+
 		conn.setRequestMethod(verb);
 		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setDoOutput(true);
@@ -113,5 +120,17 @@ public class PortfolioServices {
 		stream.close();
 
 		return json; //I use JsonStructure here so I can return a JsonObject or a JsonArray
+	}
+
+	//forward headers (including cookies) from inbound request
+	private static void copyFromRequest(HttpURLConnection conn, HttpServletRequest request) {
+		Enumeration<String> headers = request.getHeaderNames();
+		if (headers != null) {
+			while (headers.hasMoreElements()) {
+				String headerName = headers.nextElement(); //"Authorization" and "Cookie" are especially important headers
+				String headerValue = request.getHeader(headerName);
+				conn.setRequestProperty(headerName, headerValue); //odd it's called request property here, rather than header...
+			}
+		}
 	}
 }

@@ -16,8 +16,12 @@
 
 package com.ibm.hybrid.cloud.sample.portfolio;
 
-//JAX-RS 2.0 (JSR 339)
+//Servlet 3.1 (JSR 340)
+import javax.servlet.http.HttpServletRequest;
+
+//JAX-RS 2.0  (JSR 339)
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.GET;
 import javax.ws.rs.Produces;
@@ -37,7 +41,7 @@ public class Looper extends Application {
 	public static void main(String[] args) {
 		if (args.length == 1) try {
 			Looper looper = new Looper();
-			looper.loop(null, Integer.parseInt(args[0]));
+			looper.loop(null, Integer.parseInt(args[0]), null);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		} else {
@@ -48,13 +52,13 @@ public class Looper extends Application {
     @GET
     @Path("/")
 	@Produces("text/plain")
-	public String loop(@QueryParam("id") String id, @QueryParam("count") Integer count) {
+	public String loop(@QueryParam("id") String id, @QueryParam("count") Integer count, @Context HttpServletRequest request) {
     	if (id==null) id = BASE_ID;
     	if (count==null) count=1; //isn't autoboxing cool?
 
     	StringBuffer response = new StringBuffer();
 		long beginning = System.currentTimeMillis();
-		response.append("Starting run\n");
+
 		for (int index=1; index<=count; index++) {
 			if (count>1) { //only show if they asked for multiple iterations
 				response.append("\nIteration #"+index+"\n");
@@ -62,7 +66,7 @@ public class Looper extends Application {
 
 			long start = System.currentTimeMillis();
 
-			response.append(iteration(id));
+			response.append(iteration(id, request));
 
 			long end = System.currentTimeMillis();
 
@@ -79,44 +83,44 @@ public class Looper extends Application {
 		return response.toString();
 	}
 
-	public StringBuffer iteration(String id) {
+	public StringBuffer iteration(String id, HttpServletRequest request) {
 		StringBuffer response = new StringBuffer();
 
 		response.append("1:  GET /portfolio\n"+
-			PortfolioServices.getPortfolios()+"\n\n"); //Summary of all portfolios
+			PortfolioServices.getPortfolios(request)+"\n\n"); //Summary of all portfolios
 
 		response.append("2:  POST /portfolio/"+id+"\n"+
-			PortfolioServices.createPortfolio(id)+"\n\n"); //Create a new portfolio
+			PortfolioServices.createPortfolio(request, id)+"\n\n"); //Create a new portfolio
 
 		response.append("3:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=1\n"+
-			PortfolioServices.updatePortfolio(id, SYMBOL1, 1)+"\n\n"); //Buy stock for this portfolio
+			PortfolioServices.updatePortfolio(request, id, SYMBOL1, 1)+"\n\n"); //Buy stock for this portfolio
 
 		response.append("4:  PUT /portfolio/"+id+"?symbol="+SYMBOL2+"&shares=2\n"+
-			PortfolioServices.updatePortfolio(id, SYMBOL2, 2)+"\n\n"); //Buy stock for this portfolio
+			PortfolioServices.updatePortfolio(request, id, SYMBOL2, 2)+"\n\n"); //Buy stock for this portfolio
 
 		response.append("5:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=3\n"+
-			PortfolioServices.updatePortfolio(id, SYMBOL3, 3)+"\n\n"); //Buy stock for this portfolio
+			PortfolioServices.updatePortfolio(request, id, SYMBOL3, 3)+"\n\n"); //Buy stock for this portfolio
 
 		response.append("6:  GET /portfolio/"+id+"\n"+
-			PortfolioServices.getPortfolio(id)+"\n\n"); //Get details of this portfolio
+			PortfolioServices.getPortfolio(request, id)+"\n\n"); //Get details of this portfolio
 
 		response.append("7:  GET /portfolio\n"+
-			PortfolioServices.getPortfolios()+"\n\n"); //Summary of all portfolios, to see results
+			PortfolioServices.getPortfolios(request)+"\n\n"); //Summary of all portfolios, to see results
 
 		response.append("8:  PUT /portfolio/"+id+"?symbol="+SYMBOL1+"&shares=6\n"+
-			PortfolioServices.updatePortfolio(id, SYMBOL1, 6)+"\n\n"); //Buy more of this stock for this portfolio
+			PortfolioServices.updatePortfolio(request, id, SYMBOL1, 6)+"\n\n"); //Buy more of this stock for this portfolio
 
 		response.append("9:  PUT /portfolio/"+id+"?symbol="+SYMBOL3+"&shares=-3\n"+
-			PortfolioServices.updatePortfolio(id, SYMBOL3, -3)+"\n\n"); //Sell all of this stock for this portfolio
+			PortfolioServices.updatePortfolio(request, id, SYMBOL3, -3)+"\n\n"); //Sell all of this stock for this portfolio
 
 		response.append("10: GET /portfolio/"+id+"\n"+
-			PortfolioServices.getPortfolio(id)+"\n\n"); //Get details of this portfolio again
+			PortfolioServices.getPortfolio(request, id)+"\n\n"); //Get details of this portfolio again
 
 		response.append("11: DELETE /portfolio/"+id+"\n"+
-			PortfolioServices.deletePortfolio(id)+"\n\n"); //Remove this portfolio
+			PortfolioServices.deletePortfolio(request, id)+"\n\n"); //Remove this portfolio
 
 		response.append("12: GET /portfolio\n"+
-			PortfolioServices.getPortfolios()+"\n\n"); //Summary of all portfolios, to see back to beginning
+			PortfolioServices.getPortfolios(request)+"\n\n"); //Summary of all portfolios, to see back to beginning
 
 		return response;
 	}
