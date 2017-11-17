@@ -75,22 +75,6 @@
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- TBD for looking up services-->
-        <dependency>
-            <groupId>net.wasdev.wlp.starters.ms-builder</groupId>
-            <artifactId>config</artifactId>
-            <version>0.1</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.wasdev.wlp.starters.ms-builder</groupId>
-            <artifactId>faulttolerance</artifactId>
-            <version>0.1</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
