@@ -17,3 +17,4 @@ COPY server.xml /config/server.xml
 COPY server/target/server-1.0-SNAPSHOT.war /config/apps/looper.war
 COPY client/target/client-1.0-SNAPSHOT.jar /loopctl.jar
 COPY client/loopctl.sh /loopctl.sh
+RUN installUtility install --acceptLicense defaultServer
