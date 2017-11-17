@@ -15,4 +15,4 @@
 FROM websphere-liberty:microProfile
 COPY server.xml /config/server.xml
 COPY server/target/looper-1.0-SNAPSHOT.war /config/apps/looper.war
-COPY client/target/looper-1.0-SNAPSHOT.jar /looper.jar
+COPY client/target/loopctl-1.0-SNAPSHOT.jar /loopctl.jar
