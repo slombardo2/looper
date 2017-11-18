@@ -21,5 +21,11 @@
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint httpPort="9080" httpsPort="9443" host="*" id="defaultHttpEndpoint"/>
 
-    <webApplication id="Looper" location="looper.war" name="Looper" contextRoot="/looper"/>
+    <webApplication id="Looper" location="looper.war" name="Looper" contextRoot="/looper">
+        <application-bnd>
+            <security-role id="StockTrader" name="StockTrader">
+                <special-subject type="ALL_AUTHENTICATED_USERS" id="bluePagesUsers"/>
+            </security-role>
+        </application-bnd>
+    </webApplication>
 </server>
