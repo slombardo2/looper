@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
-import java.util.Scanner;
 
 public class LooperController implements Runnable {
 	private int iteration = 0;
@@ -18,14 +17,11 @@ public class LooperController implements Runnable {
 
 	public static void main(String[] args) {
 		if (args.length == 3) try {
-			Scanner scanner = new Scanner(System.in);
-
 			System.out.print("BluePages w3id: ");
-			String id = scanner.next();
-			System.out.println();
+			String id = System.console().readLine();
 
 			System.out.print("Password: ");
-			String pwd = scanner.next();
+			String pwd = new String(System.console().readPassword());
 			System.out.println();
 
 			loop(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]), id, pwd);
@@ -63,8 +59,8 @@ public class LooperController implements Runnable {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		conn.setRequestMethod(verb);
-		conn.setRequestProperty("Content-Type", "application/json");
-		conn.setRequestProperty("Authentication", auth);
+		conn.setRequestProperty("Content-Type", "text/plain");
+		conn.setRequestProperty("Authorization", auth);
 		conn.setDoOutput(true);
 		InputStream stream = conn.getInputStream();
 
@@ -76,13 +72,13 @@ public class LooperController implements Runnable {
 	}
 
 	private String stringFromStream(InputStream in) throws IOException {
-	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-	    StringBuilder out = new StringBuilder();
-	    String line = null;
-	    while ((line = reader.readLine()) != null) {
-	        out.append(line+"\n");
-	    }
-	    return out.toString();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+		StringBuilder out = new StringBuilder();
+		String line = null;
+		while ((line = reader.readLine()) != null) {
+			out.append(line+"\n");
+		}
+		return out.toString();
 	}
 
 	@Override
