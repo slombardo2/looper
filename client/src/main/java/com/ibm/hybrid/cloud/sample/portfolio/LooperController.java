@@ -6,16 +6,27 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 
 public class LooperController implements Runnable {
 	private int iteration = 0;
 	private int count = 0;
+	private String user = null;
+	private String password = null;
 	private String fullURL = null;
 	private static int completed = 0;
 
 	public static void main(String[] args) {
 		if (args.length == 3) try {
-			loop(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]));
+			Scanner scanner = new Scanner(System.in);
+
+			System.out.print("BluePages w3id: ");
+			String id = scanner.next();
+
+			System.out.println("Password: ");
+			String pwd = scanner.next();
+
+			loop(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]), id, pwd);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		} else {
@@ -25,15 +36,17 @@ public class LooperController implements Runnable {
 		}
 	}
 
-	public LooperController(String url, int index, int times) {
+	public LooperController(String url, int index, int times, String id, String pwd) {
 		fullURL = url+"?id=Looper"+index;
 		iteration = index;
 		count = times;
+		user = id;
+		password = pwd;
 	}
 
-	public static void loop(String url, int times, int threads) throws InterruptedException {
+	public static void loop(String url, int times, int threads, String id, String pwd) throws InterruptedException {
 		for (int index=1; index<=threads; index++) {
-			LooperController controller = new LooperController(url, index, times);
+			LooperController controller = new LooperController(url, index, times, id, pwd);
 			Thread thread = new Thread(controller);
 			thread.start(); //launch the run() method in a separate thread
 		}
