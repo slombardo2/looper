@@ -6,13 +6,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
 import java.util.Scanner;
 
 public class LooperController implements Runnable {
 	private int iteration = 0;
 	private int count = 0;
-	private String user = null;
-	private String password = null;
+	private String auth = null;
 	private String fullURL = null;
 	private static int completed = 0;
 
@@ -22,9 +22,11 @@ public class LooperController implements Runnable {
 
 			System.out.print("BluePages w3id: ");
 			String id = scanner.next();
+			System.out.println();
 
-			System.out.println("Password: ");
+			System.out.print("Password: ");
 			String pwd = scanner.next();
+			System.out.println();
 
 			loop(args[0], Integer.parseInt(args[1]), Integer.parseInt(args[2]), id, pwd);
 		} catch (Throwable t) {
@@ -40,8 +42,8 @@ public class LooperController implements Runnable {
 		fullURL = url+"?id=Looper"+index;
 		iteration = index;
 		count = times;
-		user = id;
-		password = pwd;
+		String credentials = id+":"+pwd;
+		auth = "Basic "+Base64.getEncoder().encodeToString(credentials.getBytes());
 	}
 
 	public static void loop(String url, int times, int threads, String id, String pwd) throws InterruptedException {
@@ -55,13 +57,14 @@ public class LooperController implements Runnable {
 		while (completed<threads) Thread.sleep(1000);
 	}
 
-	private static String invokeREST(String verb, String uri) throws IOException {
+	private String invokeREST(String verb, String uri) throws IOException {
 		URL url = new URL(uri);
 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
 		conn.setRequestMethod(verb);
 		conn.setRequestProperty("Content-Type", "application/json");
+		conn.setRequestProperty("Authentication", auth);
 		conn.setDoOutput(true);
 		InputStream stream = conn.getInputStream();
 
@@ -72,8 +75,7 @@ public class LooperController implements Runnable {
 		return response; //I use JsonStructure here so I can return a JsonObject or a JsonArray
 	}
 
-	private static String stringFromStream(InputStream in) throws IOException
-	{
+	private String stringFromStream(InputStream in) throws IOException {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 	    StringBuilder out = new StringBuilder();
 	    String line = null;
