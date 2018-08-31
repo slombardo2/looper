@@ -14,22 +14,51 @@
 <server description="Looper server">
     <!-- Enable features -->
     <featureManager>
-        <feature>microProfile-1.2</feature>
+        <feature>microProfile-1.3</feature>
         <feature>appSecurity-2.0</feature>
-        <feature>ldapRegistry-3.0</feature>
         <feature>logstashCollector-1.0</feature>
     </featureManager>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint httpPort="9080" httpsPort="9443" host="*" id="defaultHttpEndpoint"/>
 
-    <!-- Define an LDAP configuration for BluePages. -->
+    <keyStore id="defaultKeyStore" password="passw0rd" type="jks"
+         location="/config/resources/security/key.jks" />
+
+    <keyStore id="validationKeystore" password="Passw0rd" type="jks"
+         location="/config/resources/security/validationKeystore.jks" />
+
+    <sslDefault sslRef="RpSSLConfig" />
+
+    <ssl id="RpSSLConfig" keyStoreRef="defaultKeyStore" trustStoreRef="validationKeystore" />
+
+    <basicRegistry id="basic" realm="BasicRegistry">
+        <user name="admin" password="admin"/>
+        <user name="stock" password="trader"/>
+        <user name="debug" password="debug"/>
+        <user name="read"  password="only"/>
+        <user name="other" password="other"/>
+        <group name="StockTrader">
+            <member name="stock"/>
+            <member name="debug"/>
+        </group>
+        <group name="StockViewer">
+            <member name="read"/>
+        </group>
+    </basicRegistry>
+
+    <administrator-role>
+    	<user>admin</user>
+    </administrator-role>
+
+    <!-- Define an LDAP configuration for BluePages.
     <ldapRegistry ldapType="IBM Tivoli Directory Server" host="bluepages.ibm.com" port="389" baseDN="o=ibm.com" realm="BluePages">
         <idsFilters userFilter="(&amp;(emailAddress=%v)(objectclass=person))"
             groupFilter="(&amp;(cn=%v)(|(objectclass=groupOfNames)(objectclass=groupOfUniqueNames)(objectclass=groupOfURLs)))"/>
     </ldapRegistry>
 
     <ltpa expiration="1h"/>
+    -->
 
     <webAppSecurity allowFailOverToBasicAuth="true" displayAuthenticationRealm="true" logoutOnHttpSessionExpire="true"
         webAlwaysLogin="true" preserveFullyQualifiedReferrerUrl="true" trackLoggedOutSSOCookies="true" ssoCookieName="StockTraderSSO"

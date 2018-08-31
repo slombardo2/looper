@@ -14,7 +14,13 @@
 
 FROM websphere-liberty:microProfile
 COPY server.xml /config/server.xml
+COPY jvm.options /config/jvm.options
 COPY server/target/server-1.0-SNAPSHOT.war /config/apps/looper.war
 COPY client/target/client-1.0-SNAPSHOT.jar /loopctl.jar
+COPY key.jks /config/resources/security/key.jks
+COPY validationKeystore.jks /config/resources/security/validationKeystore.jks
+COPY keystore.xml /config/configDropins/defaults/keystore.xml
 COPY client/loopctl.sh /loopctl.sh
+RUN apt-get update
+RUN apt-get install curl -y
 RUN installUtility install --acceptLicense defaultServer

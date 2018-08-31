@@ -26,9 +26,22 @@ spec:
     spec:
       containers:
       - name: looper
-        image: looper:latest
+#       image: looper:latest
+        image: ibmstocktrader/looper:latest
+        env:
+          - name: JWT_AUDIENCE
+            valueFrom:
+              secretKeyRef:
+                name: jwt 
+                key: audience
+          - name: JWT_ISSUER
+            valueFrom:
+              secretKeyRef:
+                name: jwt
+                key: issuer
         ports:
           - containerPort: 9080
+          - containerPort: 9443
         imagePullPolicy: Always
 ---
 #Deploy the service
@@ -41,8 +54,14 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: 9080
-      nodePort: 31006
+    - name: http
+      protocol: TCP
+      port: 9080
+      targetPort: 9080
+    - name: https
+      protocol: TCP
+      port: 9443
+      targetPort: 9443
   selector:
     app: looper
 ---
