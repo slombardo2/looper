@@ -15,11 +15,11 @@
 -->
 
 The *looper* microservice runs a dozen calls to *portfolio* REST APIs in a loop.  You can use this for
-performance and load testing.  It is calls the *portfolio* service via the mpRestClient, and builds
-and passes the JWT that it requires.
+performance and load testing.  It is calls the *portfolio* service via the **mpRestClient** from
+**MicroProfile**, and builds and passes the **JWT** that it requires.
 
-Note it deliberately does not cause any changes in loyalty level, since Twitter will disable your
-account if you blast in too many tweets per second.  It also doesn't talk to Watson, since you only
+Note it deliberately does not cause any changes in loyalty level, since **Twitter** will disable your
+account if you blast in too many tweets per second.  It also doesn't talk to **Watson**, since you only
 get 2500 free calls per month before it starts charging you per call.
 
 It responds to a `GET ?count={count}` REST request, where you pass in the count of how many iterations
@@ -32,5 +32,6 @@ Note that the call doesn't return until all the iterations are complete.  So you
 long time in a browser (or curl) if you request a high count.  To address that, there's also a
 command-line client that will also get installed to the pod running the looper servlet.  Just
 `kubectl exec` into the pod, and then run `loopctl.sh`, passing it parameters as explained when you
-run it with no parameters.  Or you can build the CLI client locally and run it from your laptop,
-passing the URL of where the *looper* servlet is running.
+run it with no parameters.  You will see output from every iteration, with timings.  Or you can build
+the CLI client locally and run it from your laptop, passing the *node port* or *ingress* URL of where
+the *looper* servlet is running.
