@@ -48,12 +48,5 @@ service:
       port: 9080
       targetPort: 9080
 
-ingress:
-  enabled: true 
-  path: "/looper"
-  # annotations:
-    #ingress.kubernetes.io/rewrite-target: /looper
-    #nginx.ingress.kubernetes.io/rewrite-target: /looper
-
 monitoring:
   enabled: true
