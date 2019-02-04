@@ -14,10 +14,13 @@
 <server description="Looper server">
     <!-- Enable features -->
     <featureManager>
-        <feature>microProfile-2.0</feature>
+        <feature>microProfile-2.1</feature>
         <feature>appSecurity-2.0</feature>
+        <feature>jwtSso-1.0</feature>
         <feature>logstashCollector-1.0</feature>
     </featureManager>
+
+    <logging consoleLogLevel="INFO" traceSpecification="*=info"/>
 
     <!-- To access this server from a remote client add a host attribute to the following element, e.g. host="*" -->
     <httpEndpoint httpPort="9080" httpsPort="9443" host="*" id="defaultHttpEndpoint"/>
@@ -31,6 +34,12 @@
     <sslDefault sslRef="RpSSLConfig" />
 
     <ssl id="RpSSLConfig" keyStoreRef="defaultKeyStore" trustStoreRef="validationKeystore" />
+
+    <jwtSso jwtBuilderRef="myBuilder"/>
+    <jwtBuilder id="myBuilder" keyStoreRef="defaultKeyStore" keyAlias="default" issuer="${env.JWT_ISSUER}" audiences="${env.JWT_AUDIENCE}" />
+    <mpJwt id="myMpJwt" audiences="${env.JWT_AUDIENCE}" issuer="${env.JWT_ISSUER}" keyName="default" ignoreApplicationAuthMethod="false"/>
+
+    <mpMetrics authentication="false"/>
 
     <basicRegistry id="basic" realm="BasicRegistry">
         <user name="admin" password="admin"/>
