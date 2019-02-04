@@ -21,6 +21,12 @@ COPY key.jks /config/resources/security/key.jks
 COPY validationKeystore.jks /config/resources/security/validationKeystore.jks
 COPY keystore.xml /config/configDropins/defaults/keystore.xml
 COPY client/loopctl.sh /loopctl.sh
+
+#apt-get needs root access
+USER root
+RUN chmod g+w /config/apps
 RUN apt-get update
 RUN apt-get install curl -y
+USER 1001
+
 RUN installUtility install --acceptLicense defaultServer
