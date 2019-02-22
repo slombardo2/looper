@@ -17,7 +17,7 @@ public class LooperController implements Runnable {
 
 	public static void main(String[] args) {
 		if (args.length == 3) try {
-			System.out.print("BluePages w3id: ");
+			System.out.print("User ID: ");
 			String id = System.console().readLine();
 
 			System.out.print("Password: ");
