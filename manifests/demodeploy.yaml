@@ -17,6 +17,11 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: looper
+  labels:
+    solution: stock-trader
+  annotations: { 
+    prism.subkind: Liberty
+  }
 spec:
   replicas: 1
   template:
@@ -64,6 +69,22 @@ spec:
             cpu: 100m
             memory: 128Mi
 ---
+#Deploy the autoscaler
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: looper
+  labels:
+    solution: stock-trader
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: looper
+  maxReplicas: 10
+  minReplicas: 2
+  targetCPUUtilizationPercentage: 50
+---
 #Deploy the service
 apiVersion: v1
 kind: Service
@@ -89,9 +110,9 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-# annotations:
-#   ingress.kubernetes.io/rewrite-target: /looper
   name: looper-ingress
+  labels:
+    solution: stock-trader
 spec:
   rules:
   - http:
