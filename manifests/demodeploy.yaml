@@ -92,6 +92,7 @@ metadata:
   name: looper-service
   labels:
     app: looper
+    solution: stock-trader
 spec:
   type: NodePort
   ports:
