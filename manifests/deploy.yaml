@@ -1,4 +1,4 @@
-#       Copyright 2017 IBM Corp All Rights Reserved
+#       Copyright 2017-2019 IBM Corp All Rights Reserved
 
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -16,7 +16,12 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: looper
+  name: trader
+  labels:
+    app: stock-trader
+  annotations: { 
+    prism.subkind: Liberty
+  }
 spec:
   replicas: 1
   template:
@@ -39,6 +44,12 @@ spec:
               secretKeyRef:
                 name: jwt
                 key: issuer
+          - name: PORTFOLIO_URL
+            valueFrom:
+              configMapKeyRef:
+                name: urls
+                key: portfolio
+                optional: true
         ports:
           - containerPort: 9080
           - containerPort: 9443
