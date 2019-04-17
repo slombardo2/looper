@@ -36,3 +36,17 @@ run it with no parameters.  It will run a specified number of iterations, on a s
 parallel threads.  You will see output from every iteration, with timings.  Or you can build the
 CLI client locally and run it from your laptop, passing the *node port* or *ingress* URL of where
 the *looper* servlet is running.
+
+### Deploy
+
+Use WebSphere Liberty helm chart to deploy Looper microservice:
+```bash
+helm repo add ibm-charts https://raw.githubusercontent.com/IBM/charts/master/repo/stable/
+helm install ibm-charts/ibm-websphere-liberty -f <VALUES_YAML> -n <RELEASE_NAME> --tls
+```
+
+In practice this means you'll run something like:
+```bash
+helm repo add ibm-charts https://raw.githubusercontent.com/IBM/charts/master/repo/stable/
+helm install ibm-charts/ibm-websphere-liberty -f manifests/looper-values.yaml -n looper --namespace stock-trader --tls
+```
