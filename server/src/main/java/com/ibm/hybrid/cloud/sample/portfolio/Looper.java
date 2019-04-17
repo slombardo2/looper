@@ -1,5 +1,5 @@
 /*
-       Copyright 2017 IBM Corp All Rights Reserved
+       Copyright 2017-2019 IBM Corp All Rights Reserved
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -55,6 +55,18 @@ public class Looper extends Application {
 	private @Inject @ConfigProperty(name = "JWT_AUDIENCE") String jwtAudience;
 	private @Inject @ConfigProperty(name = "JWT_ISSUER") String jwtIssuer;
 
+	// Override Portfolio Client URL if config map is configured to provide URL
+	static {
+		String mpUrlPropName = PortfolioClient.class.getName() + "/mp-rest/url";
+		String portfolioURL = System.getenv("PORTFOLIO_URL");
+		if ((portfolioURL != null) && !portfolioURL.isEmpty()) {
+			logger.info("Using Portfolio URL from config map: " + portfolioURL);
+			System.setProperty(mpUrlPropName, portfolioURL);
+		} else {
+			logger.info("Portfolio URL not found from env var from config map, so defaulting to value in jvm.options: " + System.getProperty(mpUrlPropName));
+		}
+	}
+
 	public static void main(String[] args) {
 		if (args.length == 1) try {
 			Looper looper = new Looper();
@@ -66,8 +78,8 @@ public class Looper extends Application {
 		}
 	}
 
-    @GET
-    @Path("/")
+	@GET
+	@Path("/")
 	@Produces("text/plain")
 	public String loop(@QueryParam("id") String id, @QueryParam("count") Integer count) {
 		StringBuffer response = new StringBuffer();
