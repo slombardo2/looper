@@ -60,10 +60,10 @@ public class Looper extends Application {
 		String mpUrlPropName = PortfolioClient.class.getName() + "/mp-rest/url";
 		String portfolioURL = System.getenv("PORTFOLIO_URL");
 		if ((portfolioURL != null) && !portfolioURL.isEmpty()) {
-			logger.info("Using Portfolio URL from config map: " + portfolioURL);
+			System.out.println("Using Portfolio URL from config map: " + portfolioURL);
 			System.setProperty(mpUrlPropName, portfolioURL);
 		} else {
-			logger.info("Portfolio URL not found from env var from config map, so defaulting to value in jvm.options: " + System.getProperty(mpUrlPropName));
+			System.out.println("Portfolio URL not found from env var from config map, so defaulting to value in jvm.options: " + System.getProperty(mpUrlPropName));
 		}
 	}
 
