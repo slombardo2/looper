@@ -16,6 +16,8 @@
 
 package com.ibm.hybrid.cloud.sample.stocktrader.looper;
 
+import com.ibm.hybrid.cloud.sample.stocktrader.looper.client.PortfolioClient;
+
 //JSON Web Token (JWT) construction
 import com.ibm.websphere.security.jwt.InvalidBuilderException;
 import com.ibm.websphere.security.jwt.JwtBuilder;
