@@ -1,4 +1,4 @@
-#       Copyright 2017 IBM Corp All Rights Reserved
+#       Copyright 2017-2019 IBM Corp All Rights Reserved
 
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -12,21 +12,16 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-FROM websphere-liberty:microProfile2
-COPY server.xml /config/server.xml
-COPY jvm.options /config/jvm.options
-COPY server/target/server-1.0-SNAPSHOT.war /config/apps/looper.war
-COPY client/target/client-1.0-SNAPSHOT.jar /loopctl.jar
-COPY key.jks /config/resources/security/key.jks
-COPY validationKeystore.jks /config/resources/security/validationKeystore.jks
-COPY keystore.xml /config/configDropins/defaults/keystore.xml
-COPY client/loopctl.sh /loopctl.sh
+# FROM websphere-liberty:microProfile2
+FROM open-liberty:microProfile2
 
-#apt-get needs root access
-USER root
-RUN chmod g+w /config/apps
-RUN apt-get update
-RUN apt-get install curl -y
-USER 1001
+COPY --chown=1001:0 server.xml /config/server.xml
+COPY --chown=1001:0 jvm.options /config/jvm.options
+COPY --chown=1001:0 server/target/server-1.0-SNAPSHOT.war /config/apps/looper.war
+COPY --chown=1001:0 client/target/client-1.0-SNAPSHOT.jar /loopctl.jar
+COPY --chown=1001:0 key.jks /config/resources/security/key.jks
+COPY --chown=1001:0 validationKeystore.jks /config/resources/security/validationKeystore.jks
+COPY --chown=1001:0 keystore.xml /config/configDropins/defaults/keystore.xml
+COPY --chown=1001:0 client/loopctl.sh /loopctl.sh
 
-RUN installUtility install --acceptLicense defaultServer
+RUN configure.sh
