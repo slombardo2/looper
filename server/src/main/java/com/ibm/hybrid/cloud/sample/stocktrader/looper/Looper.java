@@ -180,7 +180,7 @@ public class Looper extends Application {
 			// create() uses default settings.  
 			// For other settings, specify a JWTBuilder element in server.xml
 			// and call create(builder id)
-			JwtBuilder builder = JwtBuilder.create();
+			JwtBuilder builder = JwtBuilder.create("myBuilder");
 
 			if (userName == null) userName = "null";
 
