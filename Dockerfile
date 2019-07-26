@@ -14,6 +14,7 @@
 
 # FROM websphere-liberty:microProfile2
 FROM openliberty/open-liberty:microProfile2-ubi-min
+# FROM openliberty/open-liberty:microProfile1
 
 COPY --chown=1001:0 server.xml /config/server.xml
 COPY --chown=1001:0 jvm.options /config/jvm.options
@@ -23,5 +24,7 @@ COPY --chown=1001:0 key.jks /config/resources/security/key.jks
 COPY --chown=1001:0 validationKeystore.jks /config/resources/security/validationKeystore.jks
 COPY --chown=1001:0 keystore.xml /config/configDropins/defaults/keystore.xml
 COPY --chown=1001:0 client/loopctl.sh /loopctl.sh
+
+EXPOSE 9080
 
 RUN configure.sh

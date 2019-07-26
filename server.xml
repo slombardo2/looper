@@ -27,14 +27,14 @@
     <httpEndpoint httpPort="9080" httpsPort="9443" host="*" id="defaultHttpEndpoint"/>
 
     <keyStore id="defaultKeyStore" password="passw0rd" type="jks"
-         location="/config/resources/security/key.jks" />
+         location="${server.config.dir}/resources/security/key.jks" />
 
     <keyStore id="validationKeystore" password="Passw0rd" type="jks"
-         location="/config/resources/security/validationKeystore.jks" />
+         location="${server.config.dir}/resources/security/validationKeystore.jks" />
 
     <sslDefault sslRef="RpSSLConfig" />
 
-    <ssl id="RpSSLConfig" keyStoreRef="defaultKeyStore" trustStoreRef="validationKeystore" />
+    <ssl id="RpSSLConfig" keyStoreRef="defaultKeyStore" />
 
     <jwtSso jwtBuilderRef="myBuilder"/>
     <jwtBuilder id="myBuilder" keyStoreRef="defaultKeyStore" keyAlias="default" issuer="${env.JWT_ISSUER}" audiences="${env.JWT_AUDIENCE}" />
