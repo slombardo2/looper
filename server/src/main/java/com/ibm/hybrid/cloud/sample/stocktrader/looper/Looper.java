@@ -127,8 +127,31 @@ public class Looper extends Application {
 		return response.toString();
 	}
 
+	@GET
+    @Path("/jwt")
+	@Produces("text/plain")
+	public String getjwt() {
+		StringBuffer response = new StringBuffer();
+
+		try {
+			System.out.println("Entering jwt");
+	
+			String jwt = "Bearer "+createJWT("admin");
+	
+      response.append(jwt);
+	
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+
+		return response.toString();
+	}
+	
 	public StringBuffer iteration(String id, String jwt) {
 		StringBuffer response = new StringBuffer();
+
+		response.append("0:  DELETE /portfolio/"+id+"\n"+
+			portfolioClient.deletePortfolio(jwt, id)+"\n\n"); //Remove this portfolio
 
 		response.append("1:  GET /portfolio\n"+
 			portfolioClient.getPortfolios(jwt)+"\n\n"); //Summary of all portfolios
