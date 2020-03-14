@@ -34,7 +34,7 @@
 
     <sslDefault sslRef="RpSSLConfig" />
 
-    <ssl id="RpSSLConfig" keyStoreRef="defaultKeyStore" />
+    <ssl id="RpSSLConfig" keyStoreRef="defaultKeyStore" trustDefaultCerts="true" />
 
     <jwtSso jwtBuilderRef="myBuilder"/>
     <jwtBuilder id="myBuilder" keyStoreRef="defaultKeyStore" keyAlias="default" issuer="${env.JWT_ISSUER}" audiences="${env.JWT_AUDIENCE}" />
