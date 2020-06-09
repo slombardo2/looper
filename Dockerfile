@@ -17,14 +17,14 @@ FROM openliberty/open-liberty:kernel-java11-openj9-ubi
 
 # Following line is a workaround for an issue where sometimes the server somehow loads the built-in server.xml,
 # rather than the one I copy into the image.  That shouldn't be possible, but alas, it appears to be some Docker bug.
-RUN rm /opt/ol/wlp/usr/servers/defaultServer/server.xml
+RUN rm /config/server.xml
 
 COPY --chown=1001:0 server.xml /config/server.xml
 COPY --chown=1001:0 jvm.options /config/jvm.options
 COPY --chown=1001:0 server/target/server-1.0-SNAPSHOT.war /config/apps/looper.war
 COPY --chown=1001:0 client/target/client-1.0-SNAPSHOT.jar /loopctl.jar
-COPY --chown=1001:0 key.jks /config/resources/security/key.jks
-COPY --chown=1001:0 validationKeystore.jks /config/resources/security/validationKeystore.jks
+COPY --chown=1001:0 key.p12 /config/resources/security/key.p12
+COPY --chown=1001:0 trust.p12 /config/resources/security/trust.p12
 COPY --chown=1001:0 keystore.xml /config/configDropins/defaults/keystore.xml
 COPY --chown=1001:0 client/loopctl.sh /loopctl.sh
 
