@@ -18,7 +18,7 @@
 ###########################################################################################
 
 image:
-  repository: ibmstocktrader/looper  # Docker Hub
+  repository: slombardo2/looper  # Docker Hub
   #repository: mycluster.icp:8500/stock-trader/looper   # IBM Cloud Private
   tag: latest
   pullPolicy: Always
