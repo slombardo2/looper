@@ -25,7 +25,7 @@ RUN mvn -f /usr/pom.xml clean package
 # RUN rm /opt/ol/wlp/usr/servers/defaultServer/server.xml
 ENV OPENJ9_SCC=false
 
-COPY --from=build /usr/target/trader-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps/TraderUI.war
+COPY --from=build /usr/target/looper-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps/Looper.war
 COPY --chown=1001:0 server.xml /config/server.xml
 COPY --chown=1001:0 jvm.options /config/jvm.options
 COPY --chown=1001:0 server/target/server-1.0-SNAPSHOT.war /config/apps/looper.war
