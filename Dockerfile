@@ -18,6 +18,7 @@ FROM openliberty/open-liberty:kernel-java11-openj9-ubi
 # Following line is a workaround for an issue where sometimes the server somehow loads the built-in server.xml,
 # rather than the one I copy into the image.  That shouldn't be possible, but alas, it appears to be some Docker bug.
 RUN rm /config/server.xml
+ENV OPENJ9_SCC=false
 
 COPY --chown=1001:0 server.xml /config/server.xml
 COPY --chown=1001:0 jvm.options /config/jvm.options
@@ -29,5 +30,22 @@ COPY --chown=1001:0 keystore.xml /config/configDropins/defaults/keystore.xml
 COPY --chown=1001:0 client/loopctl.sh /loopctl.sh
 
 EXPOSE 9080
+USER root
+RUN chmod 777 /opt/ol/wlp/usr/servers/defaultServer
+RUN yum -y install shadow-utils
+RUN groupadd -g 1000590000 appgrp && useradd -l -r -d /home/appuser -u 1000590000 -g appgrp appuser && chown -R appuser:appgrp /opt/ol/wlp && chown -R appuser:appgrp /logs
+USER appuser
+COPY ibm-cloud-apm-dc-configpack.tar /opt/
+COPY javametrics.liberty.icam-1.2.1.esa /opt/
+RUN mkdir -p /opt/ol/wlp/usr/extension/lib/features/
+RUN cd /tmp && jar xvf /opt/javametrics.liberty.icam-1.2.1.esa && mv /tmp/wlp/liberty_dc /opt/ol/wlp/usr/extension/ && mv /tmp/OSGI-INF/SUBSYSTEM.MF /opt/ol/wlp/usr/extension/lib/features/javametrics.liberty.icam-1.2.1.mf
+COPY silent_config_liberty_dc.txt /opt/ol/wlp/usr/extension/liberty_dc/bin/
+USER root
+RUN chmod 777 /opt/ol/wlp/usr/extension/*
+RUN chmod 777 /opt/ol/wlp/usr/extension/lib/*
+RUN chmod 777 /opt/ol/wlp/usr/extension/liberty_dc/*
+RUN chmod 777 /opt/ol/wlp/usr/extension/liberty_dc/bin/*
+USER appuser
+RUN /opt/ol/wlp/usr/extension/liberty_dc/bin/config_unified_dc.sh -silent
 
 RUN configure.sh
