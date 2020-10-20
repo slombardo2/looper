@@ -21,7 +21,7 @@ RUN mvn -f /usr/pom.xml clean package
 
 # Following line is a workaround for an issue where sometimes the server somehow loads the built-in server.xml,
 # rather than the one I copy into the image.  That shouldn't be possible, but alas, it appears to be some Docker bug.
-RUN rm /config/server.xml
+RUN rm /opt/ol/wlp/usr/servers/defaultServer/server.xml
 ENV OPENJ9_SCC=false
 
 COPY --from=build /usr/target/trader-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps/TraderUI.war
