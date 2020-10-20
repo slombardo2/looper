@@ -15,11 +15,16 @@
 # FROM websphere-liberty:microProfile3
 FROM openliberty/open-liberty:kernel-java11-openj9-ubi
 
+FROM maven:3.6-jdk-11-slim AS build
+COPY . /usr/
+RUN mvn -f /usr/pom.xml clean package
+
 # Following line is a workaround for an issue where sometimes the server somehow loads the built-in server.xml,
 # rather than the one I copy into the image.  That shouldn't be possible, but alas, it appears to be some Docker bug.
 RUN rm /config/server.xml
 ENV OPENJ9_SCC=false
 
+COPY --from=build /usr/target/trader-1.0-SNAPSHOT.war /opt/ol/wlp/usr/servers/defaultServer/apps/TraderUI.war
 COPY --chown=1001:0 server.xml /config/server.xml
 COPY --chown=1001:0 jvm.options /config/jvm.options
 COPY --chown=1001:0 server/target/server-1.0-SNAPSHOT.war /config/apps/looper.war
